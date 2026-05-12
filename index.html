@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KMS Dashboard">
+<title>KMS Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2340;
+    --navy-light: #243060;
+    --coral: #e8705a;
+    --coral-light: #f0937d;
+    --green: #7ab648;
+    --green-dark: #5c9030;
+    --gray-bg: #f2f4f8;
+    --gray-mid: #c8cdd8;
+    --gray-light: #e8eaf0;
+    --text-primary: #1a2340;
+    --text-secondary: #6b7490;
+    --white: #ffffff;
+    --bar-ist: #1a2340;
+    --line-vj: #e8705a;
+    --line-plan: #e8705a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    background: var(--gray-bg);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-primary);
+    min-height: 100vh;
+    overscroll-behavior: none;
+  }
+
+  /* TOP NAV */
+  .top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--navy);
+    padding: 14px 20px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 12px rgba(26,35,64,0.3);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-logo-icon {
+    width: 26px;
+    height: 26px;
+    background: var(--coral);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .nav-logo-text {
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.5px;
+  }
+
+  .nav-subtitle {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.3px;
+  }
+
+  .nav-menu-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .nav-menu-btn span {
+    display: block;
+    height: 2px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  .nav-menu-btn span:nth-child(1) { width: 22px; }
+  .nav-menu-btn span:nth-child(2) { width: 16px; }
+  .nav-menu-btn span:nth-child(3) { width: 20px; }
+
+  /* MAIN SCROLL AREA */
+  .scroll-content {
+    padding: 16px 16px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* SECTION HEADER BADGE */
+  .section-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0 2px;
+  }
+
+  .section-badge-line {
+    height: 2px;
+    flex: 1;
+    background: var(--gray-mid);
+    border-radius: 2px;
+  }
+
+  .section-badge-text {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* METRIC CARD */
+  .metric-card {
+    background: var(--white);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(26,35,64,0.08);
+  }
+
+  .card-header {
+    padding: 16px 18px 10px;
+    border-bottom: 1px solid var(--gray-light);
+  }
+
+  .card-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--navy);
+    text-transform: uppercase;
+  }
+
+  .card-subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+    font-weight: 400;
+  }
+
+  .card-kpi-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 18px 8px;
+  }
+
+  .kpi-main {
+    font-size: 38px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+    letter-spacing: -1px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .kpi-comparisons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .kpi-comp-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+  }
+
+  .kpi-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-vj { background: var(--green); }
+  .dot-plan { background: var(--coral); }
+  .dot-navy { background: var(--navy); }
+  .dot-coral-light { background: var(--coral-light); }
+
+  .kpi-comp-label {
+    color: var(--text-secondary);
+    font-weight: 400;
+    min-width: 32px;
+  }
+
+  .kpi-comp-val {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .kpi-comp-pct {
+    font-weight: 500;
+    font-size: 11px;
+  }
+
+  .pct-pos { color: var(--green-dark); }
+  .pct-neg { color: var(--coral); }
+  .pct-neu { color: var(--text-secondary); }
+
+  /* CHART AREA */
+  .chart-wrapper {
+    padding: 4px 12px 14px;
+    position: relative;
+  }
+
+  canvas {
+    width: 100% !important;
+    display: block;
+  }
+
+  /* LEGEND */
+  .chart-legend {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 0 12px 12px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .legend-bar {
+    width: 14px;
+    height: 10px;
+    border-radius: 2px;
+    background: var(--navy);
+  }
+
+  .legend-line {
+    width: 18px;
+    height: 2px;
+    background: var(--coral);
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .legend-line::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--coral);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* VERWEILDAUERPROFIL STACKED BAR */
+  .profile-chart {
+    padding: 6px 18px 16px;
+  }
+
+  .profile-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .profile-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    width: 24px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  .profile-bar-container {
+    flex: 1;
+    height: 44px;
+    display: flex;
+    border-radius: 6px;
+    overflow: hidden;
+    gap: 2px;
+  }
+
+  .profile-segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    transition: opacity 0.2s;
+    border-radius: 2px;
+  }
+
+  .seg-ugv { background: var(--gray-mid); color: var(--text-primary); }
+  .seg-profit { background: var(--green); }
+  .seg-cost { background: var(--coral); }
+  .seg-ogv { background: #c8cdd8; color: var(--text-primary); }
+
+  .profile-header {
+    display: flex;
+    gap: 10px;
+    padding: 0 0 6px 34px;
+  }
+
+  .profile-col-label {
+    font-size: 10px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
+
+  /* DONUT CHART */
+  .donut-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 18px 16px;
+    gap: 12px;
+  }
+
+  .donut-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+  }
+
+  .donut-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .donut-center-val {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  .donut-legend {
+    display: flex;
+    gap: 20px;
+  }
+
+  .donut-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .donut-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .donut-comp {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-self: stretch;
+    padding: 0 4px;
+  }
+
+  /* FILE UPLOAD */
+  .upload-section {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 2px 16px rgba(26,35,64,0.08);
+    border: 2px dashed var(--gray-mid);
+    text-align: center;
+  }
+
+  .upload-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .upload-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .upload-hint {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+
+  .upload-btn {
+    display: inline-block;
+    background: var(--navy);
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  #file-input { display: none; }
+
+  .upload-status {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--green-dark);
+    font-weight: 500;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 8px 0 0;
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .footer-logo-icon {
+    width: 16px;
+    height: 16px;
+    background: var(--coral);
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 800;
+    color: white;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <div class="nav-logo">
+    <div class="nav-logo-icon">K</div>
+    <div>
+      <div class="nav-logo-text">KMS Dashboard</div>
+      <div class="nav-subtitle">Innere Medizin · YTD 2026</div>
+    </div>
+  </div>
+  <div class="nav-menu-btn">
+    <span></span><span></span><span></span>
+  </div>
+</div>
+
+<!-- SCROLL CONTENT -->
+<div class="scroll-content">
+
+  <!-- DATEI HOCHLADEN -->
+  <div class="upload-section">
+    <div class="upload-icon">📊</div>
+    <div class="upload-title">Datenbasis aktualisieren</div>
+    <div class="upload-hint">Excel-Datei (DatenbasisV01.xlsx) hochladen, um die Grafiken zu aktualisieren</div>
+    <button class="upload-btn" onclick="document.getElementById('file-input').click()">Datei wählen</button>
+    <input type="file" id="file-input" accept=".xlsx,.xls" onchange="handleFile(this)">
+    <div class="upload-status" id="upload-status"></div>
+  </div>
+
+  <!-- SEITE 1: FALLZAHL & CASEMIX -->
+  <div class="section-badge">
+    <div class="section-badge-line"></div>
+    <div class="section-badge-text">Seite 1</div>
+    <div class="section-badge-line"></div>
+  </div>
+
+  <!-- FALLZAHL -->
+  <div class="metric-card">
+    <div class="card-header">
+      <div class="card-title">Fallzahl</div>
+      <div class="card-subtitle">Innere Medizin | YTD 2026</div>
+    </div>
+    <div class="card-kpi-row">
+      <div class="kpi-main" id="kpi-fallzahl">1.150</div>
+      <div class="kpi-comparisons">
+        <div class="kpi-comp-row">
+          <div class="kpi-dot dot-vj"></div>
+          <span class="kpi-comp-label">VJ:</span>
+          <span class="kpi-comp-val" id="kpi-fallzahl-vj">1.146</span>
+          <span class="kpi-comp-pct pct-neu" id="kpi-fallzahl-vj-pct">0%</span>
+        </div>
+        <div class="kpi-comp-row">
+          <div class="kpi-dot dot-plan"></div>
+          <span class="kpi-comp-label">Plan:</span>
+          <span class="kpi-comp-val" id="kpi-fallzahl-plan">1.195</span>
+          <span class="kpi-comp-pct pct-neg" id="kpi-fallzahl-plan-pct">-4%</span>
+        </div>
+      </div>
+    </div>
+    <div class="chart-wrapper">
+      <canvas id="chart-fallzahl" height="160"></canvas>
+    </div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-bar"></div> Ist</div>
+      <div class="legend-item"><div class="legend-line"></div> VJ</div>
+    </div>
+  </div>
+
+  <!-- CASEMIX -->
+  <div class="metric-card">
+    <div class="card-header">
+      <div class="card-title">Casemix</div>
+      <div class="card-subtitle">Innere Medizin | YTD 2026</div>
+    </div>
+    <div class="card-kpi-row">
+      <div class="kpi-main" id="kpi-casemix">1.375</div>
+      <div class="kpi-comparisons">
+        <div class="kpi-comp-row">
+          <div class="kpi-dot dot-vj"></div>
+          <span class="kpi-comp-label">VJ:</span>
+          <span class="kpi-comp-val" id="kpi-casemix-vj">1.287</span>
+          <span class="kpi-comp-pct pct-pos" id="kpi-casemix-vj-pct">6%</span>
+        </div>
+        <div class="kpi-comp-row">
+          <div class="kpi-dot dot-plan"></div>
+          <span class="kpi-comp-label">Plan:</span>
+          <span class="kpi-comp-val" id="kpi-casemix-plan">1.287</span>
+          <span class="kpi-comp-pct pct-pos" id="kpi-casemix-plan-pct">1%</span>
+        </div>
+      </div>
+    </div>
+    <div class="chart-wrapper">
+      <canvas id="chart-casemix" height="160"></canvas>
+    </div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-bar"></div> Ist</div>
+      <div class="legend-item"><div class="legend-line"></div> VJ</div>
+    </div>
+  </div>
+
+  <!-- SEITE 2: CASEMIXINDEX & VERWEILDAUER -->
+  <div class="section-badge">
+    <div class="section-badge-line"></div>
+    <div class="section-badge-text">Seite 2</div>
+    <div class="section-badge-line"></div>
+  </div>
+
+  <!-- CASEMIXINDEX -->
+  <div class="metric-card">
+    <div class="card-header">
+      <div class="card-title">Casemixindex</div>
+      <div class="card-subtitle">Innere Medizin | YTD 2026</div>
+    </div>
+    <div class="card-kpi-row">
+      <div class="kpi-main" id="kpi-cmi">1,234</div>
+      <div class="kpi-comparisons">
+        <div class="kpi-comp-row">
+          <div class="kpi-dot dot-vj"></div>
+          <span class="kpi-comp-label">VJ:</span>
+          <span class="kpi-comp-val" id="kpi-cmi-vj">1,257</span>
+          <span class="kpi-comp-pct pct-neg" id="kpi-cmi-vj-pct">-2%</span>
+        </div>
+        <div class="kpi-comp-row">
+          <div class="kpi-dot dot-plan"></div>
+          <span class="kpi-comp-label">Plan:</span>
+          <span class="kpi-comp-val" id="kpi-cmi-plan">1,251</span>
+          <span class="kpi-comp-pct pct-neg" id="kpi-cmi-plan-pct">-1%</span>
+        </div>
+      </div>
+    </div>
+    <div class="chart-wrapper">
+      <canvas id="chart-cmi" height="160"></canvas>
+    </div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-bar"></div> Ist</div>
+      <div class="legend-item"><div class="legend-line"></div> VJ</div>
+    </div>
+  </div>
+
+  <!-- VERWEILDAUER -->
+  <div class="metric-card">
+    <div class="card-header">
+      <div class="card-title">Verweildauer</div>
+      <div class="card-subtitle">Innere Medizin | YTD 2026</div>
+    </div>
+    <div class="card-kpi-row">
+      <div class="kpi-main" id="kpi-vwd">4,6</div>
+      <div class="kpi-comparisons">
+        <div class="kpi-comp-row">
+          <div class="kpi-dot dot-vj"></div>
+          <span class="kpi-comp-label">VJ:</span>
+          <span class="kpi-comp-val" id="kpi-vwd-vj">4,5</span>
+          <span class="kpi-comp-pct pct-pos" id="kpi-vwd-vj-pct">2%</span>
+        </div>
+        <div class="kpi-comp-row">
+          <div class="kpi-dot dot-plan"></div>
+          <span class="kpi-comp-label">Plan:</span>
+          <span class="kpi-comp-val" id="kpi-vwd-plan">4,5</span>
+          <span class="kpi-comp-pct pct-pos" id="kpi-vwd-plan-pct">2%</span>
+        </div>
+      </div>
+    </div>
+    <div class="chart-wrapper">
+      <canvas id="chart-vwd" height="160"></canvas>
+    </div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-bar"></div> Ist</div>
+      <div class="legend-item"><div class="legend-line"></div> VJ</div>
+    </div>
+  </div>
+
+  <!-- SEITE 3: VERWEILDAUERPROFIL & AUSLASTUNG -->
+  <div class="section-badge">
+    <div class="section-badge-line"></div>
+    <div class="section-badge-text">Seite 3</div>
+    <div class="section-badge-line"></div>
+  </div>
+
+  <!-- VERWEILDAUERPROFIL -->
+  <div class="metric-card">
+    <div class="card-header">
+      <div class="card-title">Verweildauerprofil</div>
+      <div class="card-subtitle">Innere Medizin | YTD 2026</div>
+    </div>
+    <div class="card-kpi-row">
+      <div class="kpi-main" id="kpi-vwdprofil">35%</div>
+      <div class="kpi-comparisons">
+        <div class="kpi-comp-row">
+          <div class="kpi-dot dot-vj"></div>
+          <span class="kpi-comp-label">VJ:</span>
+          <span class="kpi-comp-val" id="kpi-vwdprofil-vj">25%</span>
+          <span class="kpi-comp-pct pct-pos" id="kpi-vwdprofil-vj-pct">+29%</span>
+        </div>
+        <div class="kpi-comp-row">
+          <div class="kpi-dot dot-plan"></div>
+          <span class="kpi-comp-label">Plan:</span>
+          <span class="kpi-comp-val" id="kpi-vwdprofil-plan">7</span>
+          <span class="kpi-comp-pct pct-pos" id="kpi-vwdprofil-plan-pct">+20%</span>
+        </div>
+      </div>
+    </div>
+    <div class="profile-chart" id="profile-chart-container">
+      <!-- dynamisch gerendert -->
+    </div>
+  </div>
+
+  <!-- AUSLASTUNG -->
+  <div class="metric-card">
+    <div class="card-header">
+      <div class="card-title">Auslastung</div>
+      <div class="card-subtitle">Innere Medizin | YTD 2026</div>
+    </div>
+    <div class="donut-wrapper">
+      <div style="display:flex;align-items:center;gap:16px;width:100%;justify-content:center;">
+        <div class="donut-container">
+          <canvas id="chart-auslastung" width="200" height="200"></canvas>
+          <div class="donut-center">
+            <div class="donut-center-val" id="kpi-auslastung">82%</div>
+          </div>
+        </div>
+        <div class="kpi-comparisons" style="padding-top:8px;">
+          <div class="kpi-comp-row">
+            <div class="kpi-dot" style="background:var(--coral-light)"></div>
+            <span class="kpi-comp-label">VJ:</span>
+            <span class="kpi-comp-val" id="kpi-auslastung-vj">88%</span>
+            <span class="kpi-comp-pct pct-neg" id="kpi-auslastung-vj-pct">-7%</span>
+          </div>
+          <div class="kpi-comp-row">
+            <div class="kpi-dot" style="background:var(--coral-light);opacity:0.6"></div>
+            <span class="kpi-comp-label">Plan:</span>
+            <span class="kpi-comp-val" id="kpi-auslastung-plan">86%</span>
+            <span class="kpi-comp-pct pct-neg" id="kpi-auslastung-plan-pct">-5%</span>
+          </div>
+        </div>
+      </div>
+      <div class="donut-legend">
+        <div class="donut-legend-item"><div class="donut-dot" style="background:var(--navy)"></div> Ist</div>
+        <div class="donut-legend-item"><div class="donut-dot" style="background:var(--coral)"></div> VJ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-logo">
+      <div class="footer-logo-icon">◎</div>
+      <span style="color:var(--navy);font-weight:700;">kms</span>
+    </div>
+  </div>
+
+</div><!-- end scroll-content -->
+
+<!-- SheetJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<script>
+const MONTHS = ['Jan','Feb','Mrz','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+
+// ── DEFAULT DATA (aus DatenbasisV01) ──────────────────────────────────────
+let DATA = {
+  fallzahl: {
+    ist:  [157,147,169,117,157,171,100,132,null,null,null,null],
+    vj:   [132,131,168,145,145,133,126,166,129,118,169,147],
+    plan: [149.4,149.4,149.4,149.4,149.4,149.4,149.4,149.4,149.4,149.4,149.4,149.4]
+  },
+  casemix: {
+    ist:  [194.68,182.28,216.32,142.74,189.97,217.17,101,130.68,null,null,null,null],
+    vj:   [162.36,140.17,166.32,171.1,162.4,158.27,153.72,172.64,154.8,149.86,214.63,191.1],
+    plan: [180.774,194.22,173.304,159.858,156.87,156.87,168.822,170.316,188.244,161.352,185.256,174.798]
+  },
+  cmi: {
+    ist:  [1.216,1.249,1.212,1.22,1.206,1.239,1.289,1.237,null,null,null,null],
+    vj:   [1.228,1.296,1.263,1.297,1.259,1.298,1.2,1.238,1.223,1.284,1.236,1.266],
+    plan: [1.277,1.288,1.222,1.258,1.258,1.28,1.249,1.261,1.202,1.241,1.219,1.262]
+  },
+  vwd: {
+    ist:  [4.35,4.09,4.49,4.99,4.73,4.98,4.31,4.56,null,null,null,null],
+    vj:   [4.71,4.93,4.11,4.14,4.47,4.76,4.2,4.67,4.72,4.4,4.18,4.52],
+    plan: [4.19,4.17,4.14,4.51,4.93,4.81,4.36,4.53,4.56,4.55,4.34,4.42]
+  },
+  auslastung: { ist: 85.125, vj: 83.17, plan: 84.17 },
+  vwdprofil: {
+    ist: { ugv:23, profit:35, cost:26, ogv:16 },
+    vj:  { ugv:22, profit:25, cost:36, ogv:17 },
+    plan:{ ugv:20, profit:28, cost:37, ogv:17 }
+  }
+};
+
+// ── CHART INSTANCES ────────────────────────────────────────────────────────
+let charts = {};
+
+function navyColor(alpha=1){ return `rgba(26,35,64,${alpha})`; }
+function coralColor(alpha=1){ return `rgba(232,112,90,${alpha})`; }
+
+const baseChartOptions = (yMin, yMax, decimals=0) => ({
+  responsive: true,
+  maintainAspectRatio: false,
+  animation: { duration: 600, easing: 'easeInOutQuart' },
+  interaction: { intersect: false, mode: 'index' },
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: 'rgba(26,35,64,0.92)',
+      titleColor: '#fff',
+      bodyColor: 'rgba(255,255,255,0.8)',
+      padding: 10,
+      cornerRadius: 8,
+      callbacks: {
+        label: ctx => {
+          if(ctx.raw === null) return null;
+          return ` ${ctx.dataset.label}: ${ctx.raw.toLocaleString('de-DE',{minimumFractionDigits:decimals,maximumFractionDigits:decimals})}`;
+        }
+      }
+    }
+  },
+  scales: {
+    x: {
+      grid: { display: false },
+      border: { display: false },
+      ticks: { font:{ size:10, family:"'DM Sans'" }, color:'#6b7490', maxRotation:0 }
+    },
+    y: {
+      min: yMin,
+      max: yMax,
+      grid: { color:'rgba(200,205,216,0.3)', drawBorder: false },
+      border: { display: false },
+      ticks: { font:{ size:10, family:"'DM Sans'" }, color:'#6b7490',
+        callback: v => v.toLocaleString('de-DE',{minimumFractionDigits:decimals,maximumFractionDigits:decimals}) }
+    }
+  }
+});
+
+function makeBarLineChart(canvasId, istData, vjData, label, decimals=0) {
+  const ctx = document.getElementById(canvasId);
+  if(!ctx) return;
+  if(charts[canvasId]) charts[canvasId].destroy();
+
+  const valid = [...istData,...vjData].filter(v=>v!==null);
+  const mx = Math.max(...valid);
+  const yMax = Math.ceil(mx * 1.15 / (decimals?1:20)) * (decimals?1:20);
+
+  charts[canvasId] = new Chart(ctx, {
+    data: {
+      labels: MONTHS,
+      datasets: [
+        {
+          type:'bar', label:'Ist', data: istData,
+          backgroundColor: navyColor(0.9),
+          borderRadius: 4, borderSkipped: false,
+          barPercentage: 0.6, categoryPercentage: 0.7,
+          order: 2
+        },
+        {
+          type:'line', label:'VJ', data: vjData,
+          borderColor: coralColor(), backgroundColor: coralColor(0.1),
+          borderWidth: 2, pointRadius: 3, pointBackgroundColor: coralColor(),
+          tension: 0.35, fill: false, spanGaps: false,
+          order: 1
+        }
+      ]
+    },
+    options: { ...baseChartOptions(0, yMax, decimals), plugins: { ...baseChartOptions(0,yMax,decimals).plugins } }
+  });
+}
+
+function makeDonutChart(ist, vj) {
+  const ctx = document.getElementById('chart-auslastung');
+  if(!ctx) return;
+  if(charts['auslastung']) charts['auslastung'].destroy();
+
+  charts['auslastung'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      datasets: [
+        {
+          data: [ist, 100-ist],
+          backgroundColor: [navyColor(0.95), 'rgba(232,234,240,0.4)'],
+          borderWidth: 0, circumference:270, rotation:225,
+          cutout:'72%'
+        },
+        {
+          data: [vj, 100-vj],
+          backgroundColor: [coralColor(0.8), 'rgba(232,112,90,0.08)'],
+          borderWidth: 0, circumference:270, rotation:225,
+          cutout:'60%'
+        }
+      ]
+    },
+    options: {
+      responsive: false,
+      animation: { duration: 800, easing: 'easeInOutQuart' },
+      plugins: { legend:{display:false}, tooltip:{enabled:false} },
+      events: []
+    }
+  });
+}
+
+function renderProfileChart(data) {
+  const container = document.getElementById('profile-chart-container');
+  const rows = [
+    { label:'Ist', d: data.ist },
+    { label:'VJ', d: data.vj }
+  ];
+  const cols = [
+    { key:'ugv',    label:'<UGV',     cls:'seg-ugv'    },
+    { key:'profit', label:'Profit-L.',cls:'seg-profit' },
+    { key:'cost',   label:'Cost-L.',  cls:'seg-cost'   },
+    { key:'ogv',    label:'>OGV',     cls:'seg-ogv'    }
+  ];
+
+  // header
+  let html = `<div class="profile-header">`;
+  cols.forEach(c => {
+    html += `<div class="profile-col-label" style="flex:${c.key==='ugv'||c.key==='ogv'?'0.7':'1'}">${c.label}</div>`;
+  });
+  html += `</div>`;
+
+  rows.forEach(row => {
+    const total = cols.reduce((s,c)=>s+(row.d[c.key]||0),0);
+    html += `<div class="profile-row">
+      <div class="profile-label">${row.label}</div>
+      <div class="profile-bar-container">`;
+    cols.forEach(c => {
+      const pct = total>0 ? (row.d[c.key]/total*100).toFixed(1) : 0;
+      html += `<div class="profile-segment ${c.cls}" style="flex:${row.d[c.key]||0}">${row.d[c.key]||0}%</div>`;
+    });
+    html += `</div></div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+// ── KPI CALCULATION ────────────────────────────────────────────────────────
+function sumNonNull(arr) { return arr.filter(v=>v!==null).reduce((s,v)=>s+v,0); }
+function avgNonNull(arr) { const a=arr.filter(v=>v!==null); return a.length?a.reduce((s,v)=>s+v,0)/a.length:0; }
+function lastNonNull(arr) { const a=arr.filter(v=>v!==null); return a.length?a[a.length-1]:null; }
+function countMonths(arr) { return arr.filter(v=>v!==null).length; }
+
+function pctStr(ist, ref) {
+  if(!ref) return '0%';
+  const p = Math.round((ist-ref)/ref*100);
+  return (p>0?'+':'')+p+'%';
+}
+
+function pctClass(ist, ref, higherIsBetter=true) {
+  const diff = ist - ref;
+  if(Math.abs(diff/ref) < 0.005) return 'pct-neu';
+  return (diff>0) === higherIsBetter ? 'pct-pos' : 'pct-neg';
+}
+
+function fmt(val, decimals=0) {
+  return val.toLocaleString('de-DE',{minimumFractionDigits:decimals,maximumFractionDigits:decimals});
+}
+
+function updateKPIs() {
+  const n = countMonths(DATA.fallzahl.ist);
+  const vjMonths = DATA.fallzahl.vj.slice(0,n);
+  const planMonths = DATA.fallzahl.plan.slice(0,n);
+
+  // FALLZAHL
+  const fzIst = sumNonNull(DATA.fallzahl.ist);
+  const fzVj  = sumNonNull(vjMonths);
+  const fzPlan= sumNonNull(planMonths);
+  document.getElementById('kpi-fallzahl').textContent = fmt(fzIst);
+  document.getElementById('kpi-fallzahl-vj').textContent = fmt(fzVj);
+  document.getElementById('kpi-fallzahl-plan').textContent = fmt(fzPlan);
+  document.getElementById('kpi-fallzahl-vj-pct').textContent = pctStr(fzIst,fzVj);
+  document.getElementById('kpi-fallzahl-plan-pct').textContent = pctStr(fzIst,fzPlan);
+  setClass('kpi-fallzahl-vj-pct', pctClass(fzIst,fzVj));
+  setClass('kpi-fallzahl-plan-pct', pctClass(fzIst,fzPlan));
+
+  // CASEMIX
+  const cmIst = sumNonNull(DATA.casemix.ist);
+  const cmVj  = sumNonNull(DATA.casemix.vj.slice(0,n));
+  const cmPlan= sumNonNull(DATA.casemix.plan.slice(0,n));
+  document.getElementById('kpi-casemix').textContent = fmt(Math.round(cmIst));
+  document.getElementById('kpi-casemix-vj').textContent = fmt(Math.round(cmVj));
+  document.getElementById('kpi-casemix-plan').textContent = fmt(Math.round(cmPlan));
+  document.getElementById('kpi-casemix-vj-pct').textContent = pctStr(cmIst,cmVj);
+  document.getElementById('kpi-casemix-plan-pct').textContent = pctStr(cmIst,cmPlan);
+  setClass('kpi-casemix-vj-pct', pctClass(cmIst,cmVj));
+  setClass('kpi-casemix-plan-pct', pctClass(cmIst,cmPlan));
+
+  // CMI
+  const cmiIst = avgNonNull(DATA.cmi.ist);
+  const cmiVj  = avgNonNull(DATA.cmi.vj.slice(0,n));
+  const cmiPlan= avgNonNull(DATA.cmi.plan.slice(0,n));
+  document.getElementById('kpi-cmi').textContent = fmt(cmiIst,3).replace('.',',');
+  document.getElementById('kpi-cmi-vj').textContent = fmt(cmiVj,3).replace('.',',');
+  document.getElementById('kpi-cmi-plan').textContent = fmt(cmiPlan,3).replace('.',',');
+  document.getElementById('kpi-cmi-vj-pct').textContent = pctStr(cmiIst,cmiVj);
+  document.getElementById('kpi-cmi-plan-pct').textContent = pctStr(cmiIst,cmiPlan);
+  setClass('kpi-cmi-vj-pct', pctClass(cmiIst,cmiVj));
+  setClass('kpi-cmi-plan-pct', pctClass(cmiIst,cmiPlan));
+
+  // VERWEILDAUER
+  const vwdIst = avgNonNull(DATA.vwd.ist);
+  const vwdVj  = avgNonNull(DATA.vwd.vj.slice(0,n));
+  const vwdPlan= avgNonNull(DATA.vwd.plan.slice(0,n));
+  document.getElementById('kpi-vwd').textContent = fmt(vwdIst,1).replace('.',',');
+  document.getElementById('kpi-vwd-vj').textContent = fmt(vwdVj,1).replace('.',',');
+  document.getElementById('kpi-vwd-plan').textContent = fmt(vwdPlan,1).replace('.',',');
+  document.getElementById('kpi-vwd-vj-pct').textContent = pctStr(vwdIst,vwdVj);
+  document.getElementById('kpi-vwd-plan-pct').textContent = pctStr(vwdIst,vwdPlan);
+  setClass('kpi-vwd-vj-pct', pctClass(vwdIst,vwdVj,false)); // lower is better
+  setClass('kpi-vwd-plan-pct', pctClass(vwdIst,vwdPlan,false));
+
+  // AUSLASTUNG
+  const ausIst = DATA.auslastung.ist;
+  const ausVj  = DATA.auslastung.vj;
+  const ausPlan= DATA.auslastung.plan;
+  document.getElementById('kpi-auslastung').textContent = Math.round(ausIst)+'%';
+  document.getElementById('kpi-auslastung-vj').textContent = Math.round(ausVj)+'%';
+  document.getElementById('kpi-auslastung-plan').textContent = Math.round(ausPlan)+'%';
+  document.getElementById('kpi-auslastung-vj-pct').textContent = pctStr(ausIst,ausVj);
+  document.getElementById('kpi-auslastung-plan-pct').textContent = pctStr(ausIst,ausPlan);
+  setClass('kpi-auslastung-vj-pct', pctClass(ausIst,ausVj));
+  setClass('kpi-auslastung-plan-pct', pctClass(ausIst,ausPlan));
+
+  // VERWEILDAUERPROFIL
+  const pIst = DATA.vwdprofil.ist.profit;
+  const pVj  = DATA.vwdprofil.vj.profit;
+  const pPlan= DATA.vwdprofil.plan.profit;
+  document.getElementById('kpi-vwdprofil').textContent = pIst+'%';
+  document.getElementById('kpi-vwdprofil-vj').textContent = pVj+'%';
+  document.getElementById('kpi-vwdprofil-plan').textContent = pPlan;
+  document.getElementById('kpi-vwdprofil-vj-pct').textContent = pctStr(pIst,pVj);
+  document.getElementById('kpi-vwdprofil-plan-pct').textContent = pctStr(pIst,pPlan);
+  setClass('kpi-vwdprofil-vj-pct', pctClass(pIst,pVj));
+  setClass('kpi-vwdprofil-plan-pct', pctClass(pIst,pPlan));
+}
+
+function setClass(id, cls) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.className = 'kpi-comp-pct '+cls;
+}
+
+// ── RENDER ALL ─────────────────────────────────────────────────────────────
+function renderAll() {
+  updateKPIs();
+  makeBarLineChart('chart-fallzahl', DATA.fallzahl.ist, DATA.fallzahl.vj, 'Fallzahl', 0);
+  makeBarLineChart('chart-casemix',  DATA.casemix.ist,  DATA.casemix.vj,  'Casemix',  0);
+  makeBarLineChart('chart-cmi',      DATA.cmi.ist,      DATA.cmi.vj,      'CMI',      2);
+  makeBarLineChart('chart-vwd',      DATA.vwd.ist,      DATA.vwd.vj,      'VWD',      1);
+  makeDonutChart(DATA.auslastung.ist, DATA.auslastung.vj);
+  renderProfileChart(DATA.vwdprofil);
+}
+
+// ── EXCEL FILE PARSING ─────────────────────────────────────────────────────
+function handleFile(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result, { type:'array' });
+      const sheetName = wb.SheetNames.find(n=>n.toLowerCase().includes('tabelle')||n.toLowerCase().includes('sheet')) || wb.SheetNames[0];
+      const ws = wb.Sheets[sheetName];
+      const rows = XLSX.utils.sheet_to_json(ws, { header:1, defval:null });
+
+      // find header row
+      let headerIdx = rows.findIndex(r => r && r.some(c=>c&&String(c).toLowerCase().includes('wert')));
+      if(headerIdx<0) headerIdx=0;
+      const headers = rows[headerIdx].map(h=>h?String(h).trim():'');
+
+      const colIdx = n => headers.findIndex(h=>h.toLowerCase()===n.toLowerCase());
+      const iWert = colIdx('Wert'); const iDarst = colIdx('Darstellung');
+      const iWertDatum = colIdx('WertDatum'); const iDarstArt = colIdx('Darstellung Art');
+      const iJan=colIdx('Jan'),iFeb=colIdx('Feb'),iMrz=colIdx('Mrz'),iApr=colIdx('Apr');
+      const iMai=colIdx('Mai'),iJun=colIdx('Jun'),iJul=colIdx('Jul'),iAug=colIdx('Aug');
+      const iSep=colIdx('Sep'),iOkt=colIdx('Okt'),iNov=colIdx('Nov'),iDez=colIdx('Dez');
+      const monthCols=[iJan,iFeb,iMrz,iApr,iMai,iJun,iJul,iAug,iSep,iOkt,iNov,iDez];
+
+      const getMonths = row => monthCols.map(ci => {
+        if(ci<0) return null;
+        const v = row[ci];
+        return (v!==null && v!==undefined && v!=='') ? parseFloat(v)||null : null;
+      });
+
+      const dataRows = rows.slice(headerIdx+1).filter(r=>r&&r.some(v=>v!==null));
+
+      const find = (wert, darstellungArt, darstellung, wertDatum) => {
+        return dataRows.find(r => {
+          const w = r[iWert]?String(r[iWert]).trim():'';
+          const da= r[iDarstArt]?String(r[iDarstArt]).trim():'';
+          const d = r[iDarst]?String(r[iDarst]).trim():'';
+          const wd= r[iWertDatum]?String(r[iWertDatum]).trim():'';
+          return w.toLowerCase()===wert.toLowerCase()
+            && da.toLowerCase().includes(darstellungArt.toLowerCase())
+            && d.toLowerCase().includes(darstellung.toLowerCase())
+            && wd.toLowerCase()===wertDatum.toLowerCase();
+        });
+      };
+
+      const getRow = (wert, daArt, da, wd) => {
+        const row = find(wert, daArt, da, wd);
+        return row ? getMonths(row) : Array(12).fill(null);
+      };
+
+      // Parse known metrics
+      DATA.fallzahl.ist   = getRow('Fallzahl','Zeitverlauf','Balken','Ist');
+      DATA.fallzahl.vj    = getRow('Fallzahl','Zeitverlauf','Linien','VJ');
+      DATA.fallzahl.plan  = getRow('Fallzahl','Zeitverlauf','keine','Plan');
+
+      DATA.casemix.ist    = getRow('Casemix','Zeitverlauf','Balken','Ist');
+      DATA.casemix.vj     = getRow('Casemix','Zeitverlauf','Linien','VJ');
+      DATA.casemix.plan   = getRow('Casemix','Zeitverlauf','keine','Plan');
+
+      DATA.cmi.ist        = getRow('Casemixindex','Zeitverlauf','Balken','Ist');
+      DATA.cmi.vj         = getRow('Casemixindex','Zeitverlauf','Linien','VJ');
+      DATA.cmi.plan       = getRow('Casemixindex','Zeitverlauf','keine','Plan');
+
+      DATA.vwd.ist        = getRow('Verweildauer','Zeitverlauf','Balken','Ist');
+      DATA.vwd.vj         = getRow('Verweildauer','Zeitverlauf','Linien','VJ');
+      DATA.vwd.plan       = getRow('Verweildauer','Zeitverlauf','keine','Plan');
+
+      // Auslastung – Kreisdiagramm
+      const ausIstRow  = find('Auslastung','aktueller Monat','Kreisdiagramm außen','Ist');
+      const ausVjRow   = find('Auslastung','aktueller Monat','Kreisdiagramm inne','VJ');
+      const ausPlanRow = find('Auslastung','aktueller Monat','keine','Plan');
+      const iSumme = headers.findIndex(h=>h.toLowerCase().includes('summe'));
+      if(ausIstRow && iSumme>=0) DATA.auslastung.ist = parseFloat(ausIstRow[iSumme])||DATA.auslastung.ist;
+      if(ausVjRow  && iSumme>=0) DATA.auslastung.vj  = parseFloat(ausVjRow[iSumme]) ||DATA.auslastung.vj;
+      if(ausPlanRow&& iSumme>=0) DATA.auslastung.plan= parseFloat(ausPlanRow[iSumme])||DATA.auslastung.plan;
+
+      // Verweildauerprofil
+      const findProf = (wertArt, wd) => dataRows.find(r => {
+        const da = r[iDarstArt]?String(r[iDarstArt]).trim():'';
+        const wk = r[colIdx('WertArt')]!==undefined ? String(r[colIdx('WertArt')]).trim() : (r[5]?String(r[5]).trim():'');
+        const wd2= r[iWertDatum]?String(r[iWertDatum]).trim():'';
+        return da.toLowerCase().includes('seitlicher') && wk===wertArt && wd2===wd;
+      });
+
+      const iWertArt = headers.findIndex(h=>h.toLowerCase().includes('wertart')||h.toLowerCase()==='wertart');
+      const profVal = (wertArt, wd) => {
+        const row = dataRows.find(r=>{
+          const da=r[iDarstArt]?String(r[iDarstArt]).trim():'';
+          const wk=iWertArt>=0&&r[iWertArt]?String(r[iWertArt]).trim():'';
+          const wd2=r[iWertDatum]?String(r[iWertDatum]).trim():'';
+          return da.toLowerCase().includes('seitlicher') && wk===wertArt && wd2===wd;
+        });
+        return row ? (parseFloat(row[iAug])||0) : 0;
+      };
+
+      DATA.vwdprofil.ist  = { ugv:profVal('<UGV','Ist'), profit:profVal('Profit-L.','Ist'), cost:profVal('Cost-L.','Ist'), ogv:profVal('>OGV','Ist') };
+      DATA.vwdprofil.vj   = { ugv:profVal('<UGV','VJ'),  profit:profVal('Profit-L.','VJ'),  cost:profVal('Cost-L.','VJ'),  ogv:profVal('>OGV','VJ')  };
+      DATA.vwdprofil.plan = { ugv:profVal('<UGV','Plan'),profit:profVal('Profit-L.','Plan'),cost:profVal('Cost-L.','Plan'),ogv:profVal('>OGV','Plan')};
+
+      renderAll();
+      document.getElementById('upload-status').textContent = '✓ Datei erfolgreich geladen: '+file.name;
+    } catch(err) {
+      document.getElementById('upload-status').textContent = '⚠ Fehler beim Lesen: '+err.message;
+      console.error(err);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+window.addEventListener('load', renderAll);
+</script>
+</body>
+</html>
