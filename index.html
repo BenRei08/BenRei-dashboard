@@ -283,7 +283,7 @@
 
   /* VERWEILDAUERPROFIL STACKED BAR */
   .profile-chart {
-    padding: 6px 18px 16px;
+    padding: 6px 18px 22px;
   }
 
   .profile-row {
@@ -510,11 +510,7 @@
   </div>
 
   <!-- SEITE 1: FALLZAHL & CASEMIX -->
-  <div class="section-badge">
-    <div class="section-badge-line"></div>
-    <div class="section-badge-text">Seite 1</div>
-    <div class="section-badge-line"></div>
-  </div>
+
 
   <!-- FALLZAHL -->
   <div class="metric-card">
@@ -581,11 +577,7 @@
   </div>
 
   <!-- SEITE 2: CASEMIXINDEX & VERWEILDAUER -->
-  <div class="section-badge">
-    <div class="section-badge-line"></div>
-    <div class="section-badge-text">Seite 2</div>
-    <div class="section-badge-line"></div>
-  </div>
+
 
   <!-- CASEMIXINDEX -->
   <div class="metric-card">
@@ -652,11 +644,7 @@
   </div>
 
   <!-- SEITE 3: VERWEILDAUERPROFIL & AUSLASTUNG -->
-  <div class="section-badge">
-    <div class="section-badge-line"></div>
-    <div class="section-badge-text">Seite 3</div>
-    <div class="section-badge-line"></div>
-  </div>
+
 
   <!-- VERWEILDAUERPROFIL -->
   <div class="metric-card">
@@ -681,9 +669,7 @@
         </div>
       </div>
     </div>
-    <div class="profile-chart" id="profile-chart-container">
-      <!-- dynamisch gerendert -->
-    </div>
+    <div id="profile-chart-container" style="display:block;width:100%;padding:4px 16px 20px;box-sizing:border-box;"></div>
   </div>
 
   <!-- AUSLASTUNG -->
@@ -720,6 +706,38 @@
         <div class="donut-legend-item"><div class="donut-dot" style="background:var(--coral)"></div> VJ</div>
       </div>
     </div>
+  </div>
+
+  <!-- BELEGUNGSÜBERSICHT -->
+  <div class="metric-card">
+    <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div>
+        <div class="card-title">Belegungsübersicht</div>
+        <div class="card-subtitle" id="beleg-subtitle">Station 3.1 | Stand: 08:30 Uhr</div>
+      </div>
+      <div class="nav-menu-btn" style="margin-top:-2px;">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <!-- Legende -->
+    <div style="display:flex;flex-wrap:wrap;gap:10px;padding:10px 18px 4px;justify-content:flex-end;">
+      <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary);font-weight:500;">
+        <div style="width:14px;height:14px;border-radius:4px;background:#a8d8a8;"></div> frei
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary);font-weight:500;">
+        <div style="width:14px;height:14px;border-radius:4px;background:#f0b8a8;"></div> belegt
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary);font-weight:500;">
+        <div style="width:14px;height:14px;border-radius:4px;background:#e8a870;"></div> geblockt
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary);font-weight:500;">
+        <div style="width:14px;height:14px;border-radius:4px;background:#d8dae0;"></div> gesperrt
+      </div>
+    </div>
+
+    <!-- Betten-Grid -->
+    <div id="beleg-grid" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px 18px;"></div>
   </div>
 
   <!-- FOOTER -->
@@ -767,8 +785,68 @@ let DATA = {
     ist: { ugv:23, profit:35, cost:26, ogv:16 },
     vj:  { ugv:22, profit:25, cost:36, ogv:17 },
     plan:{ ugv:20, profit:28, cost:37, ogv:17 }
+  },
+  belegung: {
+    station: 'Station 3.1',
+    stand: '08:30 Uhr',
+    betten: [
+      {id:'301 L', status:'belegt'}, {id:'301 M', status:'belegt'}, {id:'301 R', status:'frei'},
+      {id:'302 L', status:'frei'},   {id:'302 M', status:'geblockt'},{id:'302 R', status:'belegt'},
+      {id:'303 L', status:'belegt'}, {id:'303 R', status:'frei'},
+      {id:'304 L', status:'frei'},   {id:'304 M', status:'belegt'}, {id:'304 R', status:'belegt'},
+      {id:'305 L', status:'frei'},   {id:'305 M', status:'belegt'}, {id:'305 R', status:'belegt'},
+      {id:'306 L', status:'belegt'}, {id:'306 R', status:'frei'},
+      {id:'307 L', status:'belegt'}, {id:'307 R', status:'belegt'},
+      {id:'308 L', status:'frei'},   {id:'308 M', status:'belegt'}, {id:'308 R', status:'gesperrt'},
+      {id:'309 L', status:'frei'},   {id:'309 M', status:'belegt'}, {id:'309 R', status:'belegt'},
+      {id:'310 L', status:'frei'},   {id:'310 LM',status:'belegt'}, {id:'310 RM',status:'frei'},   {id:'310 R', status:'belegt'},
+      {id:'311 L', status:'belegt'}, {id:'311 M', status:'belegt'}, {id:'311 R', status:'frei'},
+      {id:'312 L', status:'frei'},   {id:'312 R', status:'gesperrt'},
+      {id:'313 L', status:'belegt'}, {id:'313 LM',status:'frei'},
+      {id:'313 RM',status:'belegt'}, {id:'313 R', status:'frei'}
+    ]
   }
 };
+
+// ── BELEGUNG RENDER ────────────────────────────────────────────────────────
+const STATUS_COLORS = {
+  frei:     { bg:'#a8d8a8', text:'#2d5a2d' },
+  belegt:   { bg:'#f0b8a8', text:'#7a2d1e' },
+  geblockt: { bg:'#e8a870', text:'#7a4010' },
+  gesperrt: { bg:'#d8dae0', text:'#5a5e6b' }
+};
+
+function renderBelegung() {
+  const d = DATA.belegung;
+  document.getElementById('beleg-subtitle').textContent =
+    `${d.station} | Stand: ${d.stand}`;
+
+  const grid = document.getElementById('beleg-grid');
+  grid.innerHTML = d.betten.map(b => {
+    const c = STATUS_COLORS[b.status] || STATUS_COLORS.frei;
+    const parts = b.id.split(' ');
+    return `<div style="
+      background:${c.bg};
+      color:${c.text};
+      border-radius:8px;
+      width:calc(14.28% - 6px);
+      min-width:44px;
+      aspect-ratio:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      font-size:11px;
+      font-weight:700;
+      line-height:1.2;
+      text-align:center;
+      padding:2px;
+    ">
+      <span>${parts[0]}</span>
+      <span style="font-size:10px;font-weight:600;opacity:0.85">${parts[1]||''}</span>
+    </div>`;
+  }).join('');
+}
 
 // ── CHART INSTANCES ────────────────────────────────────────────────────────
 let charts = {};
@@ -881,36 +959,41 @@ function makeDonutChart(ist, vj) {
 
 function renderProfileChart(data) {
   const container = document.getElementById('profile-chart-container');
-  const rows = [
-    { label:'Ist', d: data.ist },
-    { label:'VJ', d: data.vj }
-  ];
   const cols = [
-    { key:'ugv',    label:'<UGV',     cls:'seg-ugv'    },
-    { key:'profit', label:'Profit-L.',cls:'seg-profit' },
-    { key:'cost',   label:'Cost-L.',  cls:'seg-cost'   },
-    { key:'ogv',    label:'>OGV',     cls:'seg-ogv'    }
+    { key:'ugv',    label:'&lt;UGV',     bg:'#d8dae0', text:'#4a4f60' },
+    { key:'profit', label:'Profit-L.', bg:'#a8d8a8', text:'#2d5a2d' },
+    { key:'cost',   label:'Cost-L.',   bg:'#f0b8a8', text:'#7a2d1e' },
+    { key:'ogv',    label:'>OGV',      bg:'#909aae', text:'#ffffff'  }
   ];
 
-  // header
-  let html = `<div class="profile-header">`;
+  const istTotal = cols.reduce((s,c) => s + (data.ist[c.key]||0), 0);
+  const vjTotal  = cols.reduce((s,c) => s + (data.vj[c.key]||0),  0);
+  const vjScale  = vjTotal > 0 ? istTotal / vjTotal : 1;
+
+  // Legende oben
+  let html = `<div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;">`;
   cols.forEach(c => {
-    html += `<div class="profile-col-label" style="flex:${c.key==='ugv'||c.key==='ogv'?'0.7':'1'}">${c.label}</div>`;
+    html += `<div style="display:flex;align-items:center;gap:5px;">
+      <div style="width:12px;height:12px;border-radius:3px;background:${c.bg};flex-shrink:0;border:1px solid rgba(0,0,0,0.08);"></div>
+      <span style="font-size:10px;font-weight:600;color:var(--text-primary);">${c.label}</span>
+    </div>`;
   });
   html += `</div>`;
 
-  rows.forEach(row => {
-    const total = cols.reduce((s,c)=>s+(row.d[c.key]||0),0);
-    html += `<div class="profile-row">
-      <div class="profile-label">${row.label}</div>
-      <div class="profile-bar-container">`;
+  function buildBar(rowLabel, d, scale) {
+    let h = `<div style="display:flex;align-items:center;gap:6px;width:100%;">`;
+    h += `<div style="width:28px;flex-shrink:0;font-size:11px;font-weight:700;color:var(--text-secondary);text-align:right;">${rowLabel}</div>`;
+    h += `<div style="flex:1;height:44px;display:flex;gap:3px;border-radius:7px;overflow:hidden;">`;
     cols.forEach(c => {
-      const pct = total>0 ? (row.d[c.key]/total*100).toFixed(1) : 0;
-      html += `<div class="profile-segment ${c.cls}" style="flex:${row.d[c.key]||0}">${row.d[c.key]||0}%</div>`;
+      const val = d[c.key] || 0;
+      h += `<div style="flex:${val*scale};background:${c.bg};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:${c.text};overflow:hidden;white-space:nowrap;">${val}%</div>`;
     });
-    html += `</div></div>`;
-  });
+    h += `</div></div>`;
+    return h;
+  }
 
+  html += `<div style="width:100%;margin-bottom:10px;">${buildBar('Ist', data.ist, 1)}</div>`;
+  html += `<div style="width:100%;">${buildBar('VJ', data.vj, vjScale)}</div>`;
   container.innerHTML = html;
 }
 
@@ -1029,6 +1112,7 @@ function renderAll() {
   makeBarLineChart('chart-vwd',      DATA.vwd.ist,      DATA.vwd.vj,      'VWD',      1);
   makeDonutChart(DATA.auslastung.ist, DATA.auslastung.vj);
   renderProfileChart(DATA.vwdprofil);
+  renderBelegung();
 }
 
 // ── EXCEL FILE PARSING ─────────────────────────────────────────────────────
