@@ -142,6 +142,14 @@
     border-radius: 18px;
     overflow: hidden;
     box-shadow: 0 2px 16px rgba(26,35,64,0.08);
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .metric-card.visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .card-header {
@@ -995,6 +1003,7 @@ function renderProfileChart(data) {
   html += `<div style="width:100%;margin-bottom:10px;">${buildBar('Ist', data.ist, 1)}</div>`;
   html += `<div style="width:100%;">${buildBar('VJ', data.vj, vjScale)}</div>`;
   container.innerHTML = html;
+  setTimeout(animateProfileBars, 50);
 }
 
 // ── KPI CALCULATION ────────────────────────────────────────────────────────
@@ -1106,13 +1115,93 @@ function setClass(id, cls) {
 // ── RENDER ALL ─────────────────────────────────────────────────────────────
 function renderAll() {
   updateKPIs();
-  makeBarLineChart('chart-fallzahl', DATA.fallzahl.ist, DATA.fallzahl.vj, 'Fallzahl', 0);
-  makeBarLineChart('chart-casemix',  DATA.casemix.ist,  DATA.casemix.vj,  'Casemix',  0);
-  makeBarLineChart('chart-cmi',      DATA.cmi.ist,      DATA.cmi.vj,      'CMI',      2);
-  makeBarLineChart('chart-vwd',      DATA.vwd.ist,      DATA.vwd.vj,      'VWD',      1);
-  makeDonutChart(DATA.auslastung.ist, DATA.auslastung.vj);
-  renderProfileChart(DATA.vwdprofil);
+  // Charts werden erst gezeichnet wenn die Kachel sichtbar ist
+  observeCard('chart-fallzahl', () => makeBarLineChart('chart-fallzahl', DATA.fallzahl.ist, DATA.fallzahl.vj, 'Fallzahl', 0));
+  observeCard('chart-casemix',  () => makeBarLineChart('chart-casemix',  DATA.casemix.ist,  DATA.casemix.vj,  'Casemix',  0));
+  observeCard('chart-cmi',      () => makeBarLineChart('chart-cmi',      DATA.cmi.ist,      DATA.cmi.vj,      'CMI',      2));
+  observeCard('chart-vwd',      () => makeBarLineChart('chart-vwd',      DATA.vwd.ist,      DATA.vwd.vj,      'VWD',      1));
+  observeCard('chart-auslastung', () => makeDonutChart(DATA.auslastung.ist, DATA.auslastung.vj));
+  observeCard('profile-chart-container', () => renderProfileChart(DATA.vwdprofil));
   renderBelegung();
+  animateBelegung();
+}
+
+// ── INTERSECTION OBSERVER: Kachel komplett sichtbar → Chart aufbauen ───────
+const _observed = new Set();
+
+function observeCard(triggerId, renderFn) {
+  const el = document.getElementById(triggerId);
+  if (!el) { renderFn(); return; }
+
+  // Kachel = nächstes .metric-card Elternelement
+  const card = el.closest('.metric-card') || el;
+
+  // Sofort rendern falls schon sichtbar (z.B. oberste Kacheln)
+  const rect = card.getBoundingClientRect();
+  if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
+    renderFn();
+    return;
+  }
+
+  if (_observed.has(triggerId)) return;
+  _observed.add(triggerId);
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.85) {
+        renderFn();
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.85 });
+
+  observer.observe(card);
+}
+
+// ── BELEGUNG: Kacheln von links nach rechts einblenden ─────────────────────
+function animateBelegung() {
+  const grid = document.getElementById('beleg-grid');
+  if (!grid) return;
+
+  const card = grid.closest('.metric-card') || grid;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+        const cells = grid.querySelectorAll('div');
+        cells.forEach((cell, i) => {
+          cell.style.opacity = '0';
+          cell.style.transform = 'translateX(-12px)';
+          cell.style.transition = 'none';
+          setTimeout(() => {
+            cell.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+            cell.style.opacity = '1';
+            cell.style.transform = 'translateX(0)';
+          }, i * 18);
+        });
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.5 });
+
+  observer.observe(card);
+}
+
+// ── PROFIL-BALKEN: von links nach rechts aufbauen ──────────────────────────
+// Wird in renderProfileChart nach dem Einfügen ins DOM aufgerufen
+function animateProfileBars() {
+  const container = document.getElementById('profile-chart-container');
+  if (!container) return;
+  const segments = container.querySelectorAll('div[style*="flex:"]');
+  segments.forEach((seg, i) => {
+    const origFlex = seg.style.flex;
+    seg.style.flex = '0';
+    seg.style.transition = 'none';
+    setTimeout(() => {
+      seg.style.transition = `flex 0.5s cubic-bezier(0.4,0,0.2,1) ${i * 60}ms`;
+      seg.style.flex = origFlex;
+    }, 80);
+  });
 }
 
 // ── EXCEL FILE PARSING ─────────────────────────────────────────────────────
@@ -1226,7 +1315,23 @@ function handleFile(input) {
 }
 
 // ── INIT ───────────────────────────────────────────────────────────────────
-window.addEventListener('load', renderAll);
+function initCardAnimations() {
+  const cards = document.querySelectorAll('.metric-card');
+  const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  cards.forEach(card => cardObserver.observe(card));
+}
+
+window.addEventListener('load', () => {
+  initCardAnimations();
+  renderAll();
+});
 </script>
 </body>
 </html>
