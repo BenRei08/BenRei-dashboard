@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="KMS Dashboard">
-<title>KMS Dashboard</title>
+<meta name="apple-mobile-web-app-title" content="BenRei Dashboard">
+<title>BenRei Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -495,7 +495,7 @@
   <div class="nav-logo">
     <div class="nav-logo-icon">K</div>
     <div>
-      <div class="nav-logo-text">KMS Dashboard</div>
+      <div class="nav-logo-text">BenRei Dashboard</div>
       <div class="nav-subtitle">Innere Medizin · YTD 2026</div>
     </div>
   </div>
@@ -748,11 +748,60 @@
     <div id="beleg-grid" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px 18px;"></div>
   </div>
 
+  <!-- BELEGUNGSSTEUERUNG -->
+  <div class="metric-card">
+    <div class="card-header">
+      <div class="card-title">Belegungssteuerung</div>
+      <div class="card-subtitle">Station 3.1 | Stand: 08:30 Uhr</div>
+    </div>
+    <!-- Legende -->
+    <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:flex-end;padding:8px 18px 4px;">
+      <div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:12px;border-radius:3px;background:#a8d8a8;"></div><span style="font-size:10px;font-weight:600;color:var(--text-primary);">Profit-L.</span></div>
+      <div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:12px;border-radius:3px;background:#e8e8e8;"></div><span style="font-size:10px;font-weight:600;color:var(--text-primary);">Kurz-L.</span></div>
+      <div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:12px;border-radius:3px;background:#f0b8a8;"></div><span style="font-size:10px;font-weight:600;color:var(--text-primary);">Cost-L.</span></div>
+      <div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:12px;border-radius:3px;background:#c8cdd8;"></div><span style="font-size:10px;font-weight:600;color:var(--text-primary);">Lang-L.</span></div>
+    </div>
+    <!-- Bett-Einträge -->
+    <div id="belegsteuerung-list" style="padding:6px 0 16px;"></div>
+  </div>
+
+  <!-- AI-ALERTASSISTENT -->
+  <div class="metric-card">
+    <div class="card-header">
+      <div class="card-title">AI-Alertassistent</div>
+      <div class="card-subtitle">Innere Medizin | Stand: 08:30 Uhr</div>
+    </div>
+    <div style="padding:14px 18px 20px;display:flex;flex-direction:column;gap:14px;">
+      <!-- Hinweise (coral dot) -->
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:7px;height:7px;border-radius:50%;background:var(--coral);flex-shrink:0;margin-top:5px;"></div>
+        <span style="font-size:13px;color:var(--text-primary);line-height:1.5;">Die Fallzahl und der Casemix liegen deutlich unter den Vormonatswerten und dem Vorjahreswert</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:7px;height:7px;border-radius:50%;background:var(--coral);flex-shrink:0;margin-top:5px;"></div>
+        <span style="font-size:13px;color:var(--text-primary);line-height:1.5;">Der Casemix-Index bleibt dahingegen konstant</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:7px;height:7px;border-radius:50%;background:var(--coral);flex-shrink:0;margin-top:5px;"></div>
+        <span style="font-size:13px;color:var(--text-primary);line-height:1.5;">Die Verweildauer zeigt dahingegen eine deutliche Verbesserung gegenüber dem Vorjahr. Ebenso die Auslastung</span>
+      </div>
+      <!-- Empfehlungen (coral star icon) -->
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--coral);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;margin-top:1px;">⭐</div>
+        <span style="font-size:13px;color:var(--text-primary);line-height:1.5;">Um die Personal-Ressourcen optimal zu nutzen, kann eine Ausweitung der Bettenkapazitäten in der Inneren Medizin sinnvoll sein.</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--coral);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;margin-top:1px;">⭐</div>
+        <span style="font-size:13px;color:var(--text-primary);line-height:1.5;">Eine zusätzliche Steigerung der Konversionsrate bzw. die Ansprache von Niedergelassenen Ärzt:innen kann zu einer Steigerung der Fallzahl führen.</span>
+      </div>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <div class="footer">
     <div class="footer-logo">
       <div class="footer-logo-icon">◎</div>
-      <span style="color:var(--navy);font-weight:700;">kms</span>
+      <span style="color:var(--navy);font-weight:700;">BenRei</span>
     </div>
   </div>
 
@@ -813,8 +862,79 @@ let DATA = {
       {id:'313 L', status:'belegt'}, {id:'313 LM',status:'frei'},
       {id:'313 RM',status:'belegt'}, {id:'313 R', status:'frei'}
     ]
-  }
+  },
+  belegsteuerung: [
+    { bett:'301 L', fall:'2146788', drg:'A40C', ist:2.1, profit:1.1, kurz:2.3, lang:4.3 },
+    { bett:'301 R', fall:'2146790', drg:'A42C', ist:6.7, profit:3.4, kurz:5.2, lang:8.1 },
+    { bett:'302 L', fall:'2146534', drg:'A51C', ist:8.1, profit:3.2, kurz:6.1, lang:9.0 },
+    { bett:'302 M', fall:'2146823', drg:'A40A', ist:1.0, profit:1.1, kurz:2.3, lang:2.3 },
+    { bett:'302 R', fall:'2146888', drg:'A40C', ist:4.0, profit:1.1, kurz:2.3, lang:4.1 },
+    { bett:'303 L', fall:'2146831', drg:'A44B', ist:6.2, profit:3.2, kurz:5.1, lang:6.8 },
+    { bett:'303 R', fall:'2146881', drg:'A39C', ist:2.8, profit:1.9, kurz:3.1, lang:4.7 }
+  ]
 };
+
+// ── BELEGUNGSSTEUERUNG RENDER ──────────────────────────────────────────────
+function renderBelegsteuerung() {
+  const list = document.getElementById('belegsteuerung-list');
+  if (!list) return;
+
+  list.innerHTML = DATA.belegsteuerung.map(b => {
+    // Grenzen: profit=1.Wert, kurz=2.Wert, lang=3.Wert
+    // MAX = lang + profit
+    const max = b.lang + b.profit;
+
+    // Prozentwerte der Farbgrenzen
+    const pProfit = (b.profit / max * 100).toFixed(2); // Ende grau / Anfang grün
+    const pKurz   = (b.kurz   / max * 100).toFixed(2); // Ende grün / Anfang rot
+    const pLang   = (b.lang   / max * 100).toFixed(2); // Ende rot / Anfang grau
+
+    // IST-Position auf Track
+    const pIst = Math.min(Math.max((b.ist / max * 100), 1), 99).toFixed(2);
+
+    // Badge-Farbe + dunklere Töne
+    let badgeColor;
+    if (b.ist < b.profit)      badgeColor = '#4a5268'; // unter grün = dunkelgrau
+    else if (b.ist <= b.kurz)  badgeColor = '#3d7a3d'; // Profit-Zone = dunkelgrün
+    else if (b.ist <= b.lang)  badgeColor = '#b03020'; // Cost-Zone = dunkelrot
+    else                       badgeColor = '#4a5268'; // über Lang = dunkelgrau
+
+    return `
+    <div style="padding:10px 18px 16px;border-bottom:1px solid var(--gray-light);">
+      <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:12px;letter-spacing:0.3px;">
+        Bett: <span style="color:var(--coral)">${b.bett}</span>
+        &nbsp;|&nbsp; Fallnummer: ${b.fall}
+        &nbsp;|&nbsp; DRG: ${b.drg}
+      </div>
+      <!-- Track -->
+      <div style="position:relative;padding:0 4px;">
+        <div style="position:relative;height:8px;border-radius:4px;overflow:hidden;">
+          <!-- Grau links: 0 → profit -->
+          <div style="position:absolute;left:0;width:${pProfit}%;height:100%;background:#d8dae0;"></div>
+          <!-- Grün: profit → kurz -->
+          <div style="position:absolute;left:${pProfit}%;width:${(Number(pKurz)-Number(pProfit)).toFixed(2)}%;height:100%;background:#a8d8a8;"></div>
+          <!-- Rot: kurz → lang -->
+          <div style="position:absolute;left:${pKurz}%;width:${(Number(pLang)-Number(pKurz)).toFixed(2)}%;height:100%;background:#f0b8a8;"></div>
+          <!-- Grau rechts: lang → max -->
+          <div style="position:absolute;left:${pLang}%;right:0;height:100%;background:#d8dae0;"></div>
+        </div>
+        <!-- IST-Badge -->
+        <div style="position:absolute;top:50%;left:calc(${pIst}% + 4px);transform:translate(-50%,-50%);
+          background:${badgeColor};color:white;font-size:11px;font-weight:700;
+          padding:3px 7px;border-radius:12px;white-space:nowrap;
+          box-shadow:0 1px 5px rgba(0,0,0,0.22);z-index:2;">
+          ${b.ist.toFixed(1).replace('.',',')}
+        </div>
+      </div>
+      <!-- Labels an den Farbgrenzen -->
+      <div style="position:relative;height:18px;margin-top:6px;padding:0 4px;">
+        <span style="position:absolute;left:${pProfit}%;transform:translateX(-50%);font-size:10px;color:var(--text-secondary);font-weight:500;">${b.profit.toFixed(1).replace('.',',')}</span>
+        <span style="position:absolute;left:${pKurz}%;transform:translateX(-50%);font-size:10px;color:var(--text-secondary);font-weight:500;">${b.kurz.toFixed(1).replace('.',',')}</span>
+        <span style="position:absolute;left:${pLang}%;transform:translateX(-50%);font-size:10px;color:var(--text-secondary);font-weight:500;">${b.lang.toFixed(1).replace('.',',')}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
 
 // ── BELEGUNG RENDER ────────────────────────────────────────────────────────
 const STATUS_COLORS = {
@@ -1123,6 +1243,7 @@ function renderAll() {
   observeCard('chart-auslastung', () => makeDonutChart(DATA.auslastung.ist, DATA.auslastung.vj));
   observeCard('profile-chart-container', () => renderProfileChart(DATA.vwdprofil));
   renderBelegung();
+  renderBelegsteuerung();
   animateBelegung();
 }
 
